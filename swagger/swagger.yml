@@ -1,0 +1,51 @@
+swagger: "2.0"
+info:
+  description: "APIとして欲しいもの"
+  version: "0.1.0"
+  title: "YourounotakiHackathon2019API"
+host: "localhost:3000"
+schemes:
+- "https"
+paths:
+  /last_image:
+    get:
+      summary: "まだ次にFIXしていない画像の中で最後に保存されている画像"
+      parameters:
+      - name: "user_id"
+        in: "query"
+        description: "user_id"
+      responses:
+        200:
+          description: "画像のURL"
+          schema:
+            type: "object"
+            properties:
+              url:
+                type: "string"
+                example: "https://image_url"
+  /next:
+    post:
+      summary: "現在の画像をFIXして新しい画像に書き込めるようにする"
+      parameters:
+      - name: "user_id"
+        in: "query"
+        description: "user_id"
+      responses:
+        200:
+          description: "200で成功"
+  /save_image:
+    post:
+      summary: "画像を保存する"
+      consumes:
+        - multipart/form-data
+      parameters:
+      - name: "user_id"
+        in: "query"
+        description: "user_id"
+      - name: "image"
+        in: "formData"
+        type: file
+        description: "保存して欲しい画像"
+      responses:
+        200:
+          description: "200で保存完了"
