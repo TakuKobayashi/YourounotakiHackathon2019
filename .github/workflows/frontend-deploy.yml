@@ -22,13 +22,20 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build
+    - name: frontend npm install, build
       working-directory: ./frontend
       run: |
         yarn install
         yarn run build --if-present
-      env:
-        CI: true
+    - name: swagger npm install, build
+      working-directory: ./swagger
+      run: |
+        yarn install
+        yarn run swagger:build --if-present
+    - name: move build swagger file
+      run: |
+        mv ./swagger/swagger/ ./frontend/build/
+        touch ./frontend/build/.nojekyll
     - name: deploy
       uses: peaceiris/actions-gh-pages@v2.5.0
       env:
