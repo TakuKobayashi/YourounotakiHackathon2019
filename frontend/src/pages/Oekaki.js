@@ -1,7 +1,8 @@
 import React from 'react';
 import PageImage from './pages.png'
+import axios from 'axios';
 import { Application, Sprite, Texture, Graphics, RenderTexture } from 'pixi.js';
-import { Card, Input, Accordion, AccordionSection, Select, Button, CheckboxToggle, Textarea } from 'react-rainbow-components';
+import { Button } from 'react-rainbow-components';
 
 export class Oekaki extends React.Component {
   constructor(props){
@@ -79,13 +80,27 @@ export class Oekaki extends React.Component {
     this.pixiApp.renderer.resize(pageBg.width, pageBg.height)
   }
 
-  saveImage(){
+  async saveImage(){
     if(this.renderTexture){
       const image = this.pixiApp.renderer.plugins.extract.image(this.renderTexture);
+      const formData = new FormData();
+      formData.append("image", image.src);
+      const resuponse = await axios.post("https://yoro2019.azurewebsites.net/save_image", formData, {
+        params: {
+          user_id: "tekitou",
+          page: 1,
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+      console.log(resuponse.status);
+      console.log(resuponse.data);
+      /*
       const link = document.createElement("a");
       link.href = image.src;
       link.download = "test.png";
       link.click();
+      */
     }
   }
 
