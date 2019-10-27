@@ -12,18 +12,20 @@ export class Oekaki extends React.Component {
       displayColorPicker: false,
       lineColor: 0x000000,
       strokeRange: 3,
+      page: 1,
     };
     this.onSaveImageSubmmit = this.onSaveImageSubmmit.bind(this);
     this.onChangeColor = this.onChangeColor.bind(this);
+    this.onNextPage = this.onNextPage.bind(this);
   }
 
   onCanvasLoaded = (canvas) => {
     this.pixiApp = new Application({ view: canvas });
     this.loadDefaultImage();
-    this.drawPath();
+    this.setupDrawPath();
   };
 
-  drawPath() {
+  setupDrawPath() {
     const app = this.pixiApp;
     const self = this;
 
@@ -98,7 +100,7 @@ export class Oekaki extends React.Component {
         .post('https://yoro2019.azurewebsites.net/save_image', formData, {
           params: {
             user_id: 'tekitou',
-            page: 1,
+            page: this.state.page,
           },
           headers: {
             'content-type': 'multipart/form-data',
@@ -116,9 +118,16 @@ export class Oekaki extends React.Component {
   }
 
   onChangeColor(color) {
-    this.state.displayColorPicker = false;
+    this.setState({displayColorPicker: false});
     const colorCode = parseInt(color.hex.slice(1), 16);
     this.setState({ lineColor: colorCode });
+  }
+
+  onNextPage(event) {
+    const currentPage = this.state.page;
+    this.setState({page: currentPage + 1});
+    this.pixiApp.renderer.render(new Sprite(), this.renderTexture, true, null, false);
+    event.preventDefault();
   }
 
   render() {
@@ -141,6 +150,7 @@ export class Oekaki extends React.Component {
             variant="brand"
           />
           <Button label="保存する" onClick={this.onSaveImageSubmmit} variant="brand" />
+          <Button label="次のページへ" onClick={this.onNextPage} variant="brand" />
         </div>
       </div>
     );
