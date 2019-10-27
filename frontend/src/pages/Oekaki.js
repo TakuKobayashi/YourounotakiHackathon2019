@@ -13,24 +13,65 @@ export class Oekaki extends React.Component {
       lineColor: 0x000000,
       strokeRange: 3,
       page: 1,
+      baseImageUrl: null,
+      baseImageSprite: null,
+      defaultLoaded: false,
+      defaultRendered: false,
     };
     this.onSaveImageSubmmit = this.onSaveImageSubmmit.bind(this);
     this.onChangeColor = this.onChangeColor.bind(this);
     this.onNextPage = this.onNextPage.bind(this);
+    this.loadCurrentImageAndPage();
+  }
+
+  async loadCurrentImageAndPage(){
+    const resuponse = await axios.get('http://yoro2019.azurewebsites.net/last_image', {
+      params: {
+        user_id: 'tekitou',
+      },
+      responseType: 'json',
+    })
+    .catch((err) => {
+      console.eeror(err);
+    });
+    this.setState({
+      page: resuponse.data.page,
+      defaultLoaded: true
+    });
+    if(resuponse.data.image_url && resuponse.data.image_url.length > 0){
+      this.setState({
+        baseImageUrl: 'http://yoro2019.azurewebsites.net' + resuponse.data.image_url,
+      });
+    }
+    if(!this.state.defaultRendered){
+      this.setupRoutine();
+    }
   }
 
   onCanvasLoaded = (canvas) => {
     this.pixiApp = new Application({ view: canvas });
+    this.setupRoutine();
+  };
+
+  setupRoutine = () => {
+    if(!this.state.defaultLoaded){
+      return;
+    }
     this.loadDefaultImage();
     this.setupDrawPath();
-  };
+    this.setState({defaultRendered: true});
+  }
 
   setupDrawPath() {
     const app = this.pixiApp;
     const self = this;
 
     const renderTexture = RenderTexture.create(app.stage.width, app.stage.height);
-
+    if(this.state.baseImageUrl && this.state.baseImageUrl.length > 0){
+      const baseImage = new Sprite.from(this.state.baseImageUrl);
+      this.setState({baseImageSprite: baseImage});
+      app.stage.addChild(baseImage);
+    }
     const renderTextureSprite = new Sprite(renderTexture);
     app.stage.addChild(renderTextureSprite);
 
@@ -125,6 +166,10 @@ export class Oekaki extends React.Component {
 
   onNextPage(event) {
     const currentPage = this.state.page;
+    if(this.state.baseImageSprite){
+      this.pixiApp.stage.removeChild(this.state.baseImageSprite);
+      this.setState({baseImageSprite: null});
+    }
     this.setState({page: currentPage + 1});
     this.pixiApp.renderer.render(new Sprite(), this.renderTexture, true, null, false);
     event.preventDefault();
