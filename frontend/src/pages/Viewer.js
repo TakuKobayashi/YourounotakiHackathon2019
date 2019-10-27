@@ -64,7 +64,7 @@ export class Viewer extends React.Component {
     }else {
       let generated_pages = []
       for (let page in this.state.pages) {
-        this.state.pages[page].image_url = this.state.pages[page].image_url.replace('/load_image?', 'http://yoro2019.azurewebsites.net/load_image?')
+        this.state.pages[page].image_url = this.state.pages[page].image_url.replace('/load_image?', 'https://yoro2019.azurewebsites.net/load_image?')
         generated_pages.push(<div key={this.state.pages[page].page} className="page"><img src={this.state.pages[page].image_url} alt="" /></div>);
       }
       return (
