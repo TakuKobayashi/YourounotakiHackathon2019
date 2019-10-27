@@ -18,7 +18,7 @@ export class Viewer extends React.Component {
   };
 
   componentWillMount() {
-    axios.get('http://yoro2019.azurewebsites.net/list_image?user_id=tekitou')
+    axios.get('https://yoro2019.azurewebsites.net/list_image?user_id=tekitou')
     .then(response => {
       this.setState({
         pages: response.data
