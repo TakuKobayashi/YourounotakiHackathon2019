@@ -1,7 +1,7 @@
 import React from 'react';
 import PageImage from './pages.png';
 import axios from 'axios';
-import { Application, Sprite, Texture, Graphics, RenderTexture } from 'pixi.js';
+import { Application, Sprite, Texture, Graphics, RenderTexture, Container } from 'pixi.js';
 import { Button } from 'react-rainbow-components';
 import { SketchPicker } from 'react-color';
 
@@ -14,6 +14,7 @@ export class Oekaki extends React.Component {
       strokeRange: 3,
       page: 1,
       baseImageUrl: null,
+      baseTexture: null,
       baseImageSprite: null,
       defaultLoaded: false,
       defaultRendered: false,
@@ -68,8 +69,9 @@ export class Oekaki extends React.Component {
 
     const renderTexture = RenderTexture.create(app.stage.width, app.stage.height);
     if(this.state.baseImageUrl && this.state.baseImageUrl.length > 0){
-      const baseImage = new Sprite.from(this.state.baseImageUrl);
-      this.setState({baseImageSprite: baseImage});
+      const baseTexture = Texture.from(this.state.baseImageUrl);
+      const baseImage = new Sprite(baseTexture);
+      this.setState({baseTexture: baseTexture, baseImageSprite: baseImage});
       app.stage.addChild(baseImage);
     }
     const renderTextureSprite = new Sprite(renderTexture);
@@ -128,7 +130,10 @@ export class Oekaki extends React.Component {
 
   async saveImage() {
     if (this.renderTexture) {
-      const image = this.pixiApp.renderer.plugins.extract.image(this.renderTexture);
+      const baseContainer = new Container();
+      baseContainer.addChild(new Sprite(this.state.baseTexture));
+      baseContainer.addChild(new Sprite(this.renderTexture));
+      const image = this.pixiApp.renderer.plugins.extract.image(baseContainer);
       const formData = new FormData();
       var bin = window.atob(image.src.replace(/^.*,/, ''));
       var buffer = new Uint8Array(bin.length);
@@ -168,7 +173,7 @@ export class Oekaki extends React.Component {
     const currentPage = this.state.page;
     if(this.state.baseImageSprite){
       this.pixiApp.stage.removeChild(this.state.baseImageSprite);
-      this.setState({baseImageSprite: null});
+      this.setState({baseImageUrl: null, baseTexture: null});
     }
     this.setState({page: currentPage + 1});
     this.pixiApp.renderer.render(new Sprite(), this.renderTexture, true, null, false);
