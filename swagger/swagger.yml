@@ -23,16 +23,9 @@ paths:
               url:
                 type: "string"
                 example: "https://image_url"
-  /next:
-    post:
-      summary: "現在の画像をFIXして新しい画像に書き込めるようにする"
-      parameters:
-      - name: "user_id"
-        in: "query"
-        description: "user_id"
-      responses:
-        200:
-          description: "200で成功"
+              page:
+                type: "int"
+                example: 1
   /save_image:
     post:
       summary: "画像を保存する"
@@ -42,6 +35,9 @@ paths:
       - name: "user_id"
         in: "query"
         description: "user_id"
+      - name: "page"
+        in: "query"
+        description: "ページ番号"
       - name: "image"
         in: "formData"
         type: file
