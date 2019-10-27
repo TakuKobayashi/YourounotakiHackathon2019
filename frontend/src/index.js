@@ -8,23 +8,13 @@ import { Home } from './pages/Home';
 import { Oekaki } from './pages/Oekaki';
 import { Viewer } from './pages/Viewer';
 
+import bgImage from './note.jpg';
+
+const style = {backgroundImage: `url(${bgImage})`}
 
 ReactDOM.render(
   <BrowserRouter basename={process.env.REACT_APP_PUBLIC_URL}>
-    <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/oekaki">Oekaki</Link>
-          </li>
-          <li>
-            <Link to="/viewer">Viewer</Link>
-          </li>
-        </ul>
-      </nav>
+    <div style={style}>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/oekaki" component={Oekaki} />
