@@ -35,7 +35,8 @@ jobs:
     - name: swagger npm install, build
       working-directory: ./frontend
       run: |
-        echo "REACT_APP_PUBLIC_URL='YourounotakiHackathon2019/'" >> ./.env.production
+        echo "REACT_APP_PUBLIC_URL='YourounotakiHackathon2019/'" >> ./.env.production.local
+        echo "REACT_APP_PUBLIC_URL='YourounotakiHackathon2019/'" >> ./.env
     - name: move build swagger file
       run: |
         mv ./swagger/swagger/ ./frontend/build/
