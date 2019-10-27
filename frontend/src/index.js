@@ -28,7 +28,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/oekaki" component={Oekaki} />
-        <Route path="/Viewer" component={Viewer} />
+        <Route path="/viewer" component={Viewer} />
       </Switch>
     </div>
   </BrowserRouter>,

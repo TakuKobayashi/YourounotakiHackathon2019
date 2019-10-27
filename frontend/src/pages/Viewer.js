@@ -1,30 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Turn from '../compoments/Turn';
 import $ from "jquery";
 import axios from 'axios';
 import "turn.js";
 
-export class Viewer extends Component {
+export class Viewer extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      pages: []
+    };
+  }
   static defaultProps = {
     style: {},
     className: "",
-    options: {},
-    data: []
+    options: {}
   };
+
+  componentWillMount() {
+    axios.get('http://yoro2019.azurewebsites.net/list_image?user_id=tekitou')
+    .then(response => {
+      this.setState({
+        pages: response.data
+      });
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
 
   componentDidMount() {
     if (this.el) {
       $(this.el).turn(Object.assign({}, this.props.options));
     }
     document.addEventListener("keydown", this.handleKeyDown, false);
-    axios.get('./sample.json')
-      .then(response => {
-        this.data = response.data.result;
-        this.setState(this.data)
-      })
-      .catch(error => {
-        console.log(error);
-      })
   }
 
   componentWillUnmount() {
@@ -46,15 +55,24 @@ export class Viewer extends Component {
   };
 
   render() {
-    return (
-      <Turn options={options} className="magazine">
-        {pages.map((page, index) => (
-          <div key={index} className="page">
-            <img src={page} alt="" />
-          </div>
-        ))}
-      </Turn>
-    );
+    let pages1;
+    console.log("rendered")
+    if (this.state.pages.length === 0) {
+      return (
+        <p>empty</p>
+      )
+    }else {
+      let generated_pages = []
+      for (let page in this.state.pages) {
+        this.state.pages[page].image_url = this.state.pages[page].image_url.replace('/load_image?', 'http://yoro2019.azurewebsites.net/load_image?')
+        generated_pages.push(<div key={this.state.pages[page].page} className="page"><img src={this.state.pages[page].image_url} alt="" /></div>);
+      }
+      return (
+        <Turn options={options} className="magazine">
+          {generated_pages}
+        </Turn>
+      );
+    }
   }
 }
 
