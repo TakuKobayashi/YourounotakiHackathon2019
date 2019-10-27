@@ -36,15 +36,6 @@ export class Viewer extends React.Component {
     document.addEventListener("keydown", this.handleKeyDown, false);
   }
 
-  componentWillUnmount() {
-    if (this.el) {
-      $(this.el)
-        .turn("destroy")
-        .remove();
-    }
-    document.removeEventListener("keydown", this.handleKeyDown, false);
-  }
-
   handleKeyDown = event => {
     if (event.keyCode === 37) {
       $(this.el).turn("previous");
