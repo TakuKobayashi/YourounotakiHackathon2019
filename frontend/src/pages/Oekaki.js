@@ -1,6 +1,7 @@
 import React from 'react';
 import PageImage from './pages.png'
 import { Application, Sprite, Texture, Graphics, RenderTexture } from 'pixi.js';
+import { Card, Input, Accordion, AccordionSection, Select, Button, CheckboxToggle, Textarea } from 'react-rainbow-components';
 
 export class Oekaki extends React.Component {
   constructor(props){
@@ -9,6 +10,7 @@ export class Oekaki extends React.Component {
       lineColor: 0x000000,
       strokeRange: 3,
     }
+    this.onSaveImageSubmmit = this.onSaveImageSubmmit.bind(this);
   }
 
   onCanvasLoaded = (canvas) => {
@@ -55,6 +57,8 @@ export class Oekaki extends React.Component {
     app.stage.on('pointerup', onDragEnd);
     app.stage.on('pointerupoutside', onDragEnd)
     app.stage.on('pointermove', onDragMove);
+
+    this.renderTexture = renderTexture;
   }
 
   drawBezier(prevPosition, currentPosition){
@@ -75,12 +79,32 @@ export class Oekaki extends React.Component {
     this.pixiApp.renderer.resize(pageBg.width, pageBg.height)
   }
 
+  saveImage(){
+    if(this.renderTexture){
+      const image = this.pixiApp.renderer.plugins.extract.image(this.renderTexture);
+      const link = document.createElement("a");
+      link.href = image.src;
+      link.download = "test.png";
+      link.click();
+    }
+  }
+
+  onSaveImageSubmmit(event){
+    this.saveImage();
+    event.preventDefault();
+  }
+
   render() {
     return (
       <div>
-        <canvas
-          ref={this.onCanvasLoaded}
-        />
+        <div>
+          <canvas
+            ref={this.onCanvasLoaded}
+          />
+        </div>
+        <div>
+          <Button label="保存する" onClick={this.onSaveImageSubmmit} variant="brand" />
+        </div>
       </div>
     )
   }
