@@ -32,6 +32,10 @@ jobs:
       run: |
         yarn install
         yarn run swagger:build --if-present
+    - name: swagger npm install, build
+      working-directory: ./frontend
+      run: |
+        echo "REACT_APP_PUBLIC_URL='YourounotakiHackathon2019/'" >> ./.env.production
     - name: move build swagger file
       run: |
         mv ./swagger/swagger/ ./frontend/build/

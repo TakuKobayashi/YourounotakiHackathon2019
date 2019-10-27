@@ -10,7 +10,7 @@ import { Viewer } from './pages/Viewer';
 
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter basename={process.env.REACT_APP_PUBLIC_URL}>
     <div>
       <nav>
         <ul>
