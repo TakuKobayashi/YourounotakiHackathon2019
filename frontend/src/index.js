@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom';
 
 import { Home } from './pages/Home';
 import { Oekaki } from './pages/Oekaki';
+import { Viewer } from './pages/Viewer';
+
 
 ReactDOM.render(
   <BrowserRouter>
@@ -19,11 +20,15 @@ ReactDOM.render(
           <li>
             <Link to="/oekaki">Oekaki</Link>
           </li>
+          <li>
+            <Link to="/viewer">Viewer</Link>
+          </li>
         </ul>
       </nav>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/oekaki" component={Oekaki} />
+        <Route path="/Viewer" component={Viewer} />
       </Switch>
     </div>
   </BrowserRouter>,

@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import ReactDOM from "react-dom";
+import React from "react";
 import $ from "jquery";
 import "turn.js";
 
-export default class Viewer extends Component {
+import "./Turn.css";
+
+export default class Turn extends React.Component {
   static defaultProps = {
     style: {},
     className: "",
@@ -47,7 +48,3 @@ export default class Viewer extends Component {
     );
   }
 }
-
-
-
-
